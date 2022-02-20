@@ -2,6 +2,7 @@ import pyaudio
 import socket
 import threading
 
+
 class Peer:
     def __init__(self, ip, port):
         self.ip = ip
@@ -25,7 +26,6 @@ class Peer:
         for i in range(a.get_device_count()):
             print(i, a.get_device_info_by_index(i)['name'])
 
-
         CHUNK = 1024
         FORMAT = pyaudio.paInt16
         CHANNELS = 1
@@ -36,19 +36,18 @@ class Peer:
         output_index = int(input('Enter speaker index '))
 
         self.vol_stream = a.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        output=True,
-                        output_device_index=output_index,
-                        frames_per_buffer=CHUNK)
+                                 channels=CHANNELS,
+                                 rate=RATE,
+                                 output=True,
+                                 output_device_index=output_index,
+                                 frames_per_buffer=CHUNK)
 
         self.mic_stream = a.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        input=True,
-                        input_device_index=input_index,
-                        frames_per_buffer=CHUNK)
-
+                                 channels=CHANNELS,
+                                 rate=RATE,
+                                 input=True,
+                                 input_device_index=input_index,
+                                 frames_per_buffer=CHUNK)
 
         if is_host:
             self.peer, _ = self.server.accept()
@@ -70,15 +69,19 @@ class Peer:
             self.vol_stream.write(data)
 
 
-if __name__ == '__main__':
-
+def main():
     if input("Are you host? y/n\n") == "y":
         PORT = int(input("Enter available port\n"))
+
         server = Peer('', PORT)
         server.start_to_host()
-
     else:
         HOST = input("Enter host IP address\n")
         PORT = int(input("Enter host port\n"))
+
         client = Peer(HOST, PORT)
         client.connect()
+
+
+if __name__ == '__main__':
+    main()
